@@ -125,7 +125,12 @@ void updateRecord(FILE *fPtr)
 
     // obtain number of account to update
     printf("%s", "Enter account to update ( 1 - 100 ): ");
-    scanf("%u", &account);
+    if (scanf("%u", &account) != 1)
+    {
+        clearInputBuffer();
+        puts("Invalid account number.");
+        return;
+    }
 
     if (account < 1 || account > 100)
     {
@@ -148,7 +153,12 @@ void updateRecord(FILE *fPtr)
 
         // request transaction amount from user
         printf("%s", "Enter charge ( + ) or payment ( - ): ");
-        scanf("%lf", &transaction);
+        if (scanf("%lf", &transaction) != 1)
+        {
+            clearInputBuffer();
+            puts("Invalid transaction amount.");
+            return;
+        }
         client.balance += transaction; // update record balance
 
         printf("%-6d%-16s%-11s%10.2f\n", client.acctNum, client.lastName, client.firstName, client.balance);
@@ -170,7 +180,12 @@ void deleteRecord(FILE *fPtr)
 
     // obtain number of account to delete
     printf("%s", "Enter account number to delete ( 1 - 100 ): ");
-    scanf("%u", &accountNum);
+    if (scanf("%u", &accountNum) != 1)
+    {
+        clearInputBuffer();
+        puts("Invalid account number.");
+        return;
+    }
 
     if (accountNum < 1 || accountNum > 100)
     {
@@ -205,7 +220,12 @@ void newRecord(FILE *fPtr)
 
     // obtain number of account to create
     printf("%s", "Enter new account number ( 1 - 100 ): ");
-    scanf("%u", &accountNum);
+    if (scanf("%u", &accountNum) != 1)
+    {
+        clearInputBuffer();
+        puts("Invalid account number.");
+        return;
+    }
 
     if (accountNum < 1 || accountNum > 100)
     {
@@ -226,7 +246,12 @@ void newRecord(FILE *fPtr)
     { // create record
         // user enters last name, first name and balance
         printf("%s", "Enter lastname, firstname, balance\n? ");
-        scanf("%14s%9s%lf", client.lastName, client.firstName, &client.balance);
+        if (scanf("%14s%9s%lf", client.lastName, client.firstName, &client.balance) != 3)
+        {
+            clearInputBuffer();
+            puts("Invalid data entered.");
+            return;
+        }
 
         client.acctNum = accountNum;
         // move file pointer to correct record in file
