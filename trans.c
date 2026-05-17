@@ -11,7 +11,8 @@
 #define UPDATE_RECORD 2
 #define NEW_RECORD 3
 #define DELETE_RECORD 4
-#define END_PROGRAM 5
+#define DISPLAY_RECORDS 5
+#define END_PROGRAM 6
 
 // clientData structure definition
 struct clientData
@@ -28,6 +29,7 @@ void textFile(FILE *readPtr);
 void updateRecord(FILE *fPtr);
 void newRecord(FILE *fPtr);
 void deleteRecord(FILE *fPtr);
+void displayAllRecords(FILE *fPtr);
 void clearInputBuffer(void);
 void pauseConsole(void);
 
@@ -78,6 +80,10 @@ int main(int argc, char *argv[])
             break;
         case DELETE_RECORD:
             deleteRecord(cfPtr);
+            pauseConsole();
+            break;
+        case DISPLAY_RECORDS:
+            displayAllRecords(cfPtr);
             pauseConsole();
             break;
         default:
@@ -288,7 +294,8 @@ unsigned int enterChoice(void)
                  "2 - update an account\n"
                  "3 - add a new account\n"
                  "4 - delete an account\n"
-                 "5 - end program\n? ");
+                 "5 - display all active accounts\n"
+                 "6 - end program\n? ");
 
     if (scanf("%u", &menuChoice) != 1)
     {
@@ -313,4 +320,23 @@ void pauseConsole(void)
 {
     puts(""); // add a blank line for readability
     system("pause");
+}
+
+// display all active records in the console
+void displayAllRecords(FILE *fPtr)
+{
+    struct clientData client = {0, "", "", 0.0};
+
+    rewind(fPtr); // start from beginning
+    printf("\n%-6s%-16s%-11s%10s\n", "Acct", "Last Name", "First Name", "Balance");
+    puts("---------------------------------------------");
+
+    while (fread(&client, sizeof(struct clientData), 1, fPtr) == 1)
+    {
+        if (client.acctNum != 0)
+        {
+            printf("%-6d%-16s%-11s%10.2f\n", client.acctNum, client.lastName, client.firstName, client.balance);
+        }
+    }
+    puts("---------------------------------------------");
 }
