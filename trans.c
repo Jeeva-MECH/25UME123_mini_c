@@ -177,9 +177,9 @@ void updateRecord(FILE *fPtr)
 // delete an existing record
 void deleteRecord(FILE *fPtr)
 {
-    struct clientData client;                       // stores record read from file
-    struct clientData blankClient = {0, "", "", 0}; // blank client
-    unsigned int accountNum;                        // account number
+    struct clientData client = {0, "", "", 0.0};      // stores record read from file
+    struct clientData blankClient = {0, "", "", 0.0}; // blank client
+    unsigned int accountNum;                          // account number
 
     // obtain number of account to delete
     printf("Enter account number to delete ( 1 - %d ): ", MAX_RECORDS);
