@@ -3,6 +3,16 @@
 // be placed in the file, and deletes data previously in the file.
 #include <stdio.h>
 #include <stdlib.h>
+
+#define MAX_RECORDS 100
+
+// Menu choices
+#define EXPORT_TXT 1
+#define UPDATE_RECORD 2
+#define NEW_RECORD 3
+#define DELETE_RECORD 4
+#define END_PROGRAM 5
+
 // clientData structure definition
 struct clientData
 {
@@ -40,8 +50,8 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
 
-        // Initialize the file with 100 blank records
-        for (i = 1; i <= 100; ++i)
+        // Initialize the file with MAX_RECORDS blank records
+        for (i = 1; i <= MAX_RECORDS; ++i)
         {
             fwrite(&blankClient, sizeof(struct clientData), 1, cfPtr);
         }
@@ -49,27 +59,22 @@ int main(int argc, char *argv[])
     }
 
     // enable user to specify action
-    while ((choice = enterChoice()) != 5)
+    while ((choice = enterChoice()) != END_PROGRAM)
     {
         switch (choice)
         {
-        // create text file from record file
-        case 1:
+        case EXPORT_TXT:
             textFile(cfPtr);
             break;
-        // update record
-        case 2:
+        case UPDATE_RECORD:
             updateRecord(cfPtr);
             break;
-        // create record
-        case 3:
+        case NEW_RECORD:
             newRecord(cfPtr);
             break;
-        // delete existing record
-        case 4:
+        case DELETE_RECORD:
             deleteRecord(cfPtr);
             break;
-        // display if user does not select valid choice
         default:
             puts("Incorrect choice");
             break;
@@ -121,7 +126,7 @@ void updateRecord(FILE *fPtr)
     struct clientData client = {0, "", "", 0.0};
 
     // obtain number of account to update
-    printf("%s", "Enter account to update ( 1 - 100 ): ");
+    printf("Enter account to update ( 1 - %d ): ", MAX_RECORDS);
     if (scanf("%u", &account) != 1)
     {
         clearInputBuffer();
@@ -129,7 +134,7 @@ void updateRecord(FILE *fPtr)
         return;
     }
 
-    if (account < 1 || account > 100)
+    if (account < 1 || account > MAX_RECORDS)
     {
         puts("Invalid account number.");
         return;
@@ -177,7 +182,7 @@ void deleteRecord(FILE *fPtr)
     unsigned int accountNum;                        // account number
 
     // obtain number of account to delete
-    printf("%s", "Enter account number to delete ( 1 - 100 ): ");
+    printf("Enter account number to delete ( 1 - %d ): ", MAX_RECORDS);
     if (scanf("%u", &accountNum) != 1)
     {
         clearInputBuffer();
@@ -185,7 +190,7 @@ void deleteRecord(FILE *fPtr)
         return;
     }
 
-    if (accountNum < 1 || accountNum > 100)
+    if (accountNum < 1 || accountNum > MAX_RECORDS)
     {
         puts("Invalid account number.");
         return;
@@ -218,7 +223,7 @@ void newRecord(FILE *fPtr)
     unsigned int accountNum; // account number
 
     // obtain number of account to create
-    printf("%s", "Enter new account number ( 1 - 100 ): ");
+    printf("Enter new account number ( 1 - %d ): ", MAX_RECORDS);
     if (scanf("%u", &accountNum) != 1)
     {
         clearInputBuffer();
@@ -226,7 +231,7 @@ void newRecord(FILE *fPtr)
         return;
     }
 
-    if (accountNum < 1 || accountNum > 100)
+    if (accountNum < 1 || accountNum > MAX_RECORDS)
     {
         puts("Invalid account number.");
         return;
