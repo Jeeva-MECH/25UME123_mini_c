@@ -84,7 +84,6 @@ int main(int argc, char *argv[])
 void textFile(FILE *readPtr)
 {
     FILE *writePtr; // accounts.txt file pointer
-    int result;     // used to test whether fread read any bytes
     // create clientData with default information
     struct clientData client = {0, "", "", 0.0};
 
@@ -99,12 +98,10 @@ void textFile(FILE *readPtr)
         fprintf(writePtr, "%-6s%-16s%-11s%10s\n", "Acct", "Last Name", "First Name", "Balance");
 
         // copy all records from random-access file into text file
-        while (!feof(readPtr))
+        while (fread(&client, sizeof(struct clientData), 1, readPtr) == 1)
         {
-            result = fread(&client, sizeof(struct clientData), 1, readPtr);
-
             // write single record to text file
-            if (result != 0 && client.acctNum != 0)
+            if (client.acctNum != 0)
             {
                 fprintf(writePtr, "%-6d%-16s%-11s%10.2f\n", client.acctNum, client.lastName, client.firstName,
                         client.balance);
@@ -168,6 +165,7 @@ void updateRecord(FILE *fPtr)
         fseek(fPtr, -(long)sizeof(struct clientData), SEEK_CUR);
         // write updated record over old record in file
         fwrite(&client, sizeof(struct clientData), 1, fPtr);
+        puts("\nAccount updated successfully.");
     } // end else
 } // end function updateRecord
 
@@ -208,6 +206,7 @@ void deleteRecord(FILE *fPtr)
         fseek(fPtr, (accountNum - 1) * sizeof(struct clientData), SEEK_SET);
         // replace existing record with blank record
         fwrite(&blankClient, sizeof(struct clientData), 1, fPtr);
+        puts("\nAccount deleted successfully.");
     } // end else
 } // end function deleteRecord
 
@@ -258,6 +257,7 @@ void newRecord(FILE *fPtr)
         fseek(fPtr, (client.acctNum - 1) * sizeof(struct clientData), SEEK_SET);
         // insert record in file
         fwrite(&client, sizeof(struct clientData), 1, fPtr);
+        puts("\nAccount created successfully.");
     } // end else
 } // end function newRecord
 
