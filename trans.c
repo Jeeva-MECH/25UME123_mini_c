@@ -120,6 +120,7 @@ void textFile(FILE *readPtr)
         }     // end while
 
         fclose(writePtr); // fclose closes the file
+        puts("\nData successfully exported to accounts.txt.");
     }                     // end else
 } // end function textFile
 
