@@ -27,8 +27,20 @@ int main(int argc, char *argv[])
     // fopen opens the file; exits if file cannot be opened
     if ((cfPtr = fopen("credit.dat", "rb+")) == NULL)
     {
-        printf("%s: File could not be opened.\n", argv[0]);
-        exit(-1);
+        // If file doesn't exist, try to create and initialize it
+        if ((cfPtr = fopen("credit.dat", "wb+")) == NULL)
+        {
+            printf("%s: File could not be opened.\n", argv[0]);
+            exit(-1);
+        }
+
+        // Initialize the file with 100 blank records
+        struct clientData blankClient = {0, "", "", 0.0};
+        for (unsigned int i = 1; i <= 100; ++i)
+        {
+            fwrite(&blankClient, sizeof(struct clientData), 1, cfPtr);
+        }
+        rewind(cfPtr);
     }
 
     // enable user to specify action
@@ -60,6 +72,7 @@ int main(int argc, char *argv[])
     }     // end while
 
     fclose(cfPtr); // fclose closes the file
+    return 0;
 } // end main
 
 // create formatted text file for printing
@@ -107,7 +120,13 @@ void updateRecord(FILE *fPtr)
 
     // obtain number of account to update
     printf("%s", "Enter account to update ( 1 - 100 ): ");
-    scanf("%d", &account);
+    scanf("%u", &account);
+
+    if (account < 1 || account > 100)
+    {
+        puts("Invalid account number.");
+        return;
+    }
 
     // move file pointer to correct record in file
     fseek(fPtr, (account - 1) * sizeof(struct clientData), SEEK_SET);
@@ -116,7 +135,7 @@ void updateRecord(FILE *fPtr)
     // display error if account does not exist
     if (client.acctNum == 0)
     {
-        printf("Account #%d has no information.\n", account);
+        printf("Account #%u has no information.\n", account);
     }
     else
     { // update record
@@ -131,7 +150,7 @@ void updateRecord(FILE *fPtr)
 
         // move file pointer to correct record in file
         // move back by 1 record length
-        fseek(fPtr, -sizeof(struct clientData), SEEK_CUR);
+        fseek(fPtr, -(long)sizeof(struct clientData), SEEK_CUR);
         // write updated record over old record in file
         fwrite(&client, sizeof(struct clientData), 1, fPtr);
     } // end else
@@ -146,7 +165,13 @@ void deleteRecord(FILE *fPtr)
 
     // obtain number of account to delete
     printf("%s", "Enter account number to delete ( 1 - 100 ): ");
-    scanf("%d", &accountNum);
+    scanf("%u", &accountNum);
+
+    if (accountNum < 1 || accountNum > 100)
+    {
+        puts("Invalid account number.");
+        return;
+    }
 
     // move file pointer to correct record in file
     fseek(fPtr, (accountNum - 1) * sizeof(struct clientData), SEEK_SET);
@@ -155,7 +180,7 @@ void deleteRecord(FILE *fPtr)
     // display error if record does not exist
     if (client.acctNum == 0)
     {
-        printf("Account %d does not exist.\n", accountNum);
+        printf("Account %u does not exist.\n", accountNum);
     } // end if
     else
     { // delete record
@@ -175,7 +200,13 @@ void newRecord(FILE *fPtr)
 
     // obtain number of account to create
     printf("%s", "Enter new account number ( 1 - 100 ): ");
-    scanf("%d", &accountNum);
+    scanf("%u", &accountNum);
+
+    if (accountNum < 1 || accountNum > 100)
+    {
+        puts("Invalid account number.");
+        return;
+    }
 
     // move file pointer to correct record in file
     fseek(fPtr, (accountNum - 1) * sizeof(struct clientData), SEEK_SET);
@@ -184,7 +215,7 @@ void newRecord(FILE *fPtr)
     // display error if account already exists
     if (client.acctNum != 0)
     {
-        printf("Account #%d already contains information.\n", client.acctNum);
+        printf("Account #%u already contains information.\n", client.acctNum);
     } // end if
     else
     { // create record
