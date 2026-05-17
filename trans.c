@@ -18,9 +18,12 @@ void textFile(FILE *readPtr);
 void updateRecord(FILE *fPtr);
 void newRecord(FILE *fPtr);
 void deleteRecord(FILE *fPtr);
+void clearInputBuffer(void);
 
 int main(int argc, char *argv[])
 {
+    (void)argc; // suppress unused parameter warning
+
     FILE *cfPtr;         // credit.dat file pointer
     unsigned int choice; // user's choice
 
@@ -34,7 +37,7 @@ int main(int argc, char *argv[])
         if ((cfPtr = fopen("credit.dat", "wb+")) == NULL)
         {
             printf("%s: File could not be opened.\n", argv[0]);
-            exit(-1);
+            exit(EXIT_FAILURE);
         }
 
         // Initialize the file with 100 blank records
@@ -246,6 +249,20 @@ unsigned int enterChoice(void)
                  "4 - delete an account\n"
                  "5 - end program\n? ");
 
-    scanf("%u", &menuChoice); // receive choice from user
+    if (scanf("%u", &menuChoice) != 1)
+    {
+        clearInputBuffer();
+        return 0; // Return invalid choice
+    }
     return menuChoice;
 } // end function enterChoice
+
+// clear input buffer to prevent infinite loops on invalid input
+void clearInputBuffer(void)
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+    {
+        // discard character
+    }
+}
