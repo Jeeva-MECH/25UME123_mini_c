@@ -29,6 +29,7 @@ void updateRecord(FILE *fPtr);
 void newRecord(FILE *fPtr);
 void deleteRecord(FILE *fPtr);
 void clearInputBuffer(void);
+void pauseConsole(void);
 
 int main(int argc, char *argv[])
 {
@@ -65,18 +66,23 @@ int main(int argc, char *argv[])
         {
         case EXPORT_TXT:
             textFile(cfPtr);
+            pauseConsole();
             break;
         case UPDATE_RECORD:
             updateRecord(cfPtr);
+            pauseConsole();
             break;
         case NEW_RECORD:
             newRecord(cfPtr);
+            pauseConsole();
             break;
         case DELETE_RECORD:
             deleteRecord(cfPtr);
+            pauseConsole();
             break;
         default:
             puts("Incorrect choice");
+            pauseConsole();
             break;
         } // end switch
     }     // end while
@@ -270,6 +276,10 @@ void newRecord(FILE *fPtr)
 unsigned int enterChoice(void)
 {
     unsigned int menuChoice; // variable to store user's choice
+    
+    // Clear the console for a clean menu experience
+    system("cls");
+
     // display available options
     printf("%s", "\nEnter your choice\n"
                  "1 - store a formatted text file of accounts called\n"
@@ -295,4 +305,11 @@ void clearInputBuffer(void)
     {
         // discard character
     }
+}
+
+// pause the console so the user can read messages before the screen clears
+void pauseConsole(void)
+{
+    puts(""); // add a blank line for readability
+    system("pause");
 }
