@@ -27,6 +27,9 @@ int main(int argc, char *argv[])
     // fopen opens the file; exits if file cannot be opened
     if ((cfPtr = fopen("credit.dat", "rb+")) == NULL)
     {
+        struct clientData blankClient = {0, "", "", 0.0};
+        unsigned int i;
+
         // If file doesn't exist, try to create and initialize it
         if ((cfPtr = fopen("credit.dat", "wb+")) == NULL)
         {
@@ -35,8 +38,7 @@ int main(int argc, char *argv[])
         }
 
         // Initialize the file with 100 blank records
-        struct clientData blankClient = {0, "", "", 0.0};
-        for (unsigned int i = 1; i <= 100; ++i)
+        for (i = 1; i <= 100; ++i)
         {
             fwrite(&blankClient, sizeof(struct clientData), 1, cfPtr);
         }
